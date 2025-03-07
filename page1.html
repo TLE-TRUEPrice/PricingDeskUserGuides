@@ -205,60 +205,49 @@
       <h2>Account Information</h2>
 
       <label for="account-name">Account Name:</label>
-      <p class="description">For price request identification.</p>
+      <p class="description">Account holder's name as it appears on utility invoice</p>
       <input type="text" id="account-name" placeholder="DEF Co" />
       <p class="limitations">Should not be empty.</p>
       <p class="example">Example: DEF Co</p>
 
-      <label for="account-address">Account Address:</label>
-      <p class="description">For price request identification.</p>
+      <label for="account-address">Service Address:</label>
+      <p class="description">Address that recieve service</p>
       <input type="text" id="account-address" placeholder="1st Main St" />
       <p class="limitations">Should not be empty.</p>
       <p class="example">Example: 1st Main St</p>
 
-      <label for="account-number">Account #:</label>
-      <p class="description">For price request identification.</p>
+      <label for="account-number">Utility Account #:</label>
+      <p class="description">Utility assigned account number as it appears on utility invoice</p>
       <input type="text" id="account-number" placeholder="111111-111111" />
       <p class="limitations">Should not be empty.</p>
       <p class="example">Example: 111111-111111</p>
 
       <label for="curve-date">Curve Date:</label>
-      <p class="description">Curves date of processing.</p>
+      <p class="description">Date of production for data used to calculate price</p>
       <input type="date" id="curve-date" />
       <p class="limitations">Energy curves must be present on this date.</p>
       <p class="example">Example: 4/19/2024</p>
 
-      <label for="timestamp">TimeStamp:</label>
-      <p class="description">
-        Time of curves within a single date of processing. Specify time if COB is not required 
-        and multiple curves are present in single date.
-      </p>
-      <input type="text" id="timestamp" placeholder="COB or specific time" />
-      <p class="limitations">
-        If not COB, then the specified time must be available in the curve date.
-      </p>
-      <p class="example">Example: COB</p>
-
       <label for="start-date">Start Date:</label>
-      <p class="description">Start Date.</p>
+      <p class="description">Anticipated service start date</p>
       <input type="date" id="start-date" />
       <p class="limitations">Data must be available in specified date range.</p>
       <p class="example">Example: 9/1/2024</p>
 
       <label for="term-months">Term (Months):</label>
-      <p class="description">Difference of months between start and end date.</p>
+      <p class="description">Anticipated duration of service</p>
       <input type="number" id="term-months" placeholder="12" />
       <p class="example">Example: 12</p>
 
       <label for="end-date">End Date:</label>
-      <p class="description">End Date.</p>
+      <p class="description">Anticipated service end date</p>
       <input type="date" id="end-date" />
       <p class="limitations">Data must be available in specified date range.</p>
       <p class="example">Example: 9/1/2025</p>
 
       <!-- CONTROL AREA (MARKET) -->
       <label for="control-area">Control Area:</label>
-      <p class="description">Market of interest for price desk calculation.</p>
+      <p class="description">Independent System Operator (grid) that service will occur in</p>
       <select id="control-area">
         <option value="">--Select Control Area--</option>
       </select>
@@ -269,7 +258,7 @@
 
       <!-- STATE -->
       <label for="state">State:</label>
-      <p class="description">State of interest for price desk calculation.</p>
+      <p class="description">Applicable state</p>
       <select id="state">
         <option value="">--Select State--</option>
       </select>
@@ -280,7 +269,7 @@
 
       <!-- LOAD ZONE -->
       <label for="load-zone">Load Zone:</label>
-      <p class="description">Load Zone of interest for price desk calculation.</p>
+      <p class="description">Applicable settlement point</p>
       <select id="load-zone">
         <option value="">--Select Load Zone--</option>
       </select>
@@ -291,7 +280,7 @@
 
       <!-- CAPACITY ZONE -->
       <label for="capacity-zone">Capacity Zone:</label>
-      <p class="description">Capacity Zone of interest for price desk calculation.</p>
+      <p class="description">Applicable capacity zone (Applicable in NYISO only, leave blank otherwise)</p>
       <select id="capacity-zone">
         <option value="">--Select Capacity Zone--</option>
       </select>
@@ -302,7 +291,7 @@
 
       <!-- UTILITY -->
       <label for="utility">Utility:</label>
-      <p class="description">Utility of interest for price desk calculation.</p>
+      <p class="description">Geographically-applicable utility providing delivery service</p>
       <select id="utility">
         <option value="">--Select Utility--</option>
       </select>
@@ -312,7 +301,7 @@
       <p class="example">Example: Oncor</p>
 
       <label for="load-profile">Load Profile:</label>
-      <p class="description">Load Profile of interest for price desk calculation.</p>
+      <p class="description">Utility assigned load profile - See list of available load profiles</p>
       <input type="text" id="load-profile" placeholder="BUSHIDG_NORTH" />
       <p class="limitations">
         Specified Load Profile must be present in selected curve date of load profile.
@@ -320,7 +309,7 @@
       <p class="example">Example: BUSHIDG_NORTH</p>
 
       <label for="voltage">Voltage:</label>
-      <p class="description">Voltage of interest for price desk calculation.</p>
+      <p class="description">Utility assigned voltage level - See list of available voltage levels</p>
       <input type="text" id="voltage" placeholder="B" />
       <p class="limitations">
         Specified Voltage must be present in selected curve date for lineloss.
@@ -328,39 +317,39 @@
       <p class="example">Example: B</p>
 
       <label for="plc">PLC (kW-mo):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Utility assigned Peak Load Controbution tags - available through EDI</p>
       <input type="text" id="plc" placeholder="-" />
       <p class="limitations">Can be empty if not required by the market.</p>
       <p class="example">Example: -</p>
 
       <label for="nspl">NSPL (kW-mo):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Utility assigned Network System Peak Load - available through EDI</p>
       <input type="text" id="nspl" placeholder="-" />
       <p class="limitations">Can be empty if not required by the market.</p>
       <p class="example">Example: -</p>
 
-      <label for="margin">Margin ($/MWh):</label>
+      <label for="margin">Profit Margin ($/MWh):</label>
       <input type="text" id="margin" placeholder="$10.00" />
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Price adder meant to capture anticipated profit margin</p>
       <p class="example">Example: $10.00</p>
 
       <label for="sleeve-fee">Sleeve Fee ($/MWh):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Represents credit sleeve fee - if applicable</p>
       <input type="text" id="sleeve-fee" placeholder="$1.25" />
       <p class="example">Example: $1.25</p>
 
       <label for="utility-billing">Utility Billing Surcharge ($/MWh):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Represents utility billing service charges - if applicable (Example: CUBS, POR, etc)</p>
       <input type="text" id="utility-billing" placeholder="$0.50" />
       <p class="example">Example: $0.50</p>
 
       <label for="other1">Other 1 ($/MWh):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Other applicable charges not captured in above components</p>
       <input type="text" id="other1" placeholder="$1.00" />
       <p class="example">Example: $1.00</p>
 
       <label for="other2">Other 2 ($/MWh):</label>
-      <p class="description">A special factor in dollar amounts.</p>
+      <p class="description">Other applicable charges not captured in above components</p>
       <input type="text" id="other2" placeholder="$0.00" />
       <p class="example">Example: $0.00</p>
     </div>
@@ -395,7 +384,6 @@
   </div>
 
   <script>
-    // All unique combinations expanded from the table you provided.
     const combinations = [
       {controlArea:"ERCOT", state:"TX", loadZone:"Houston Zone", capacityZone:"Houston Zone", utility:"AEP-CENTRAL"},
       {controlArea:"ERCOT", state:"TX", loadZone:"Houston Zone", capacityZone:"Houston Zone", utility:"CENTERPOINT"},
