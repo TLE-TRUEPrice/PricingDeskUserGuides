@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PricingDesk API Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     /* Base resets and body styling */
     * {
@@ -176,14 +176,14 @@
     }
 
     ul.small-bullets {
-        list-style-position: outside; 
-        margin-left: -0.0em;          
-        padding-left: 1.5em;         
+      list-style-position: outside; 
+      margin-left: -0.0em;          
+      padding-left: 1.5em;         
     }
   
-  ul.small-bullets li::marker {
-    font-size: 0.75em; /* Decrease the bullet font size */
-  }
+    ul.small-bullets li::marker {
+      font-size: 0.75em; /* Decrease the bullet font size */
+    }
   </style>
 </head>
 <body>
@@ -229,7 +229,7 @@
         </p>
 
         <p class="subheading">HTTP Method</p>
-        <p>POST</p>
+        <p>GET</p>
 
         <p class="subheading">URL</p>
         <p>
@@ -264,20 +264,23 @@
 
         <p class="subheading">Example Request</p>
         <pre>
-POST /login?email=abhatti@truelightenergy.com&amp;password=abhatti@truelightenergy.com HTTP/1.1
+GET /login?email=johndoe@example.com&amp;password=SecurePass123 HTTP/1.1
 Host: 3.21.123.23:8011
 </pre>
 
-        <button class="copy-btn" onclick="copyToClipboard(`POST /login?email=abhatti@truelightenergy.com&password=abhatti@truelightenergy.com HTTP/1.1\nHost: 3.21.123.23:8011\n`)">Copy</button>
+        <button class="copy-btn"
+          data-clipboard='GET /login?email=johndoe@example.com&password=SecurePass123 HTTP/1.1
+Host: 3.21.123.23:8011
+'
+          onclick="copyToClipboard(this)">Copy</button>
 
         <p class="subheading">Response</p>
         <p>The response body will contain a JSON Web Token (JWT) if the credentials are valid.</p>
         <pre>
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....",
-  "expires": 1738419383,
-  "role": "admin",
-  ...
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "message_flag": "success",
+  "msg": "Logged In Successfully"
 }
         </pre>
 
@@ -301,8 +304,8 @@ Host: 3.21.123.23:8011
         <p class="subheading">Description</p>
         <p>
           Retrieves a price calculation based on the request body parameters. 
-          The data may include summary, monthly summary, grouped costs, hourly costs, or
-          hourly calculations depending on the <code>response_type</code> specified.
+          The data may include summary, monthly summary, or other types depending
+          on <code>response_type</code>.
         </p>
 
         <p class="subheading">HTTP Method</p>
@@ -373,44 +376,18 @@ Host: 3.21.123.23:8011
       "Historical Usage": "N"
     }
   ],
-  "response_type": "hourly_calulation", 
-  // Possible values: "summary", "monthly_summary", "grouped_costs", "hourly_costs", "hourly_calulation"
+  "response_type": "summary", 
+  // Possible values: "summary", "monthly_summary"
 
   "response_file_type": "xlsx"
   // Possible values: "csv" or "xlsx"
 }
-    </pre>
-        <button class="copy-btn" onclick="copyToClipboard(`{
-  \"price_request_forms\": [
-    {
-      \"Account Name\": \"ABC Co\",
-      \"Account Address\": \"1st Main St\",
-      \"Account #\": \"111111-111111\",
-      \"Curve Date\": \"01/01/2023\",
-      \"TimeStamp\": \"08:04:04+00:00\",
-      \"Start Date\": \"11/01/2024\",
-      \"Term (Months)\": \"12\",
-      \"End Date\": \"11/01/2025\",
-      \"Control Area\": \"MISO\",
-      \"Utility\": \"AMEREN\",
-      \"Load Zone\": \"AMILCILCO\",
-      \"Capacity Zone\": \"AMILCILCO\",
-      \"State\": \"IL\",
-      \"Load Profile\": \"DS2HH-CILCO\",
-      \"Voltage\": \"Secondary\",
-      \"PLC (kW-mo)\": \"2.3\",
-      \"NSPL (kW-mo)\": \"2.5\",
-      \"Margin ($/MWh)\": \"10.00\",
-      \"Sleeve Fee ($/MWh)\": \"1.25\",
-      \"Utility Billing Surcharge ($/MWh)\": \"0.50\",
-      \"Other 1 ($/MWh)\": \"1.00\",
-      \"Other 2 ($/MWh)\": \"0.00\",
-      \"Historical Usage\": \"N\"
-    }
-  ],
-  \"response_type\": \"hourly_calulation\",
-  \"response_file_type\": \"xlsx\"
-}`)">Copy</button>
+        </pre>
+
+        <!-- FIRST COPY BUTTON (REQUEST BODY) -->
+        <button class="copy-btn"
+          data-clipboard='{"price_request_forms":[{"Account Name":"ABC Co","Account Address":"1st Main St","Account #":"111111-111111","Curve Date":"01/01/2023","TimeStamp":"08:04:04+00:00","Start Date":"11/01/2024","Term (Months)":"12","End Date":"11/01/2025","Control Area":"MISO","Utility":"AMEREN","Load Zone":"AMILCILCO","Capacity Zone":"AMILCILCO","State":"IL","Load Profile":"DS2HH-CILCO","Voltage":"Secondary","PLC (kW-mo)":"2.3","NSPL (kW-mo)":"2.5","Margin ($/MWh)":"10.00","Sleeve Fee ($/MWh)":"1.25","Utility Billing Surcharge ($/MWh)":"0.50","Other 1 ($/MWh)":"1.00","Other 2 ($/MWh)":"0.00","Historical Usage":"N"}],"response_type":"hourly_calulation","response_file_type":"xlsx"}'
+          onclick="copyToClipboard(this)">Copy</button>
 
         <div class="important">
           <strong>Important:</strong> 
@@ -427,11 +404,23 @@ Content-Type: application/json
 
 {
   "price_request_forms": [...],
-  "response_type": "hourly_calculation",
+  "response_type": "summary",
   "response_file_type": "xlsx"
 }
         </pre>
-        <button class="copy-btn" onclick="copyToClipboard(`GET /calculateprices HTTP/1.1\nHost: 3.21.123.23:8011\nAuthorization: Bearer <your_token_here>\nContent-Type: application/json\n\n{\n  \"price_request_forms\": [...],\n  \"response_type\": \"hourly_calulation\",\n  \"response_file_type\": \"xlsx\"\n}`)">Copy</button>
+        <!-- SECOND COPY BUTTON (EXAMPLE REQUEST) -->
+        <button class="copy-btn"
+          data-clipboard='GET /calculateprices HTTP/1.1
+Host: 3.21.123.23:8011
+Authorization: Bearer <your_token_here>
+Content-Type: application/json
+
+{
+  "price_request_forms": [...],
+  "response_type": "hourly_calculation",
+  "response_file_type": "xlsx"
+}'
+          onclick="copyToClipboard(this)">Copy</button>
 
         <p class="subheading">Expected Response</p>
         <p>
@@ -475,10 +464,9 @@ Content-Type: application/json
         A 401 status typically indicates an invalid or expired token. Make sure you have:
         </p>
     
-        <!-- Apply the custom class to the UL -->
         <ul class="small-bullets">
-        <li>Called the <strong>Login</strong> endpoint to retrieve a valid token.</li>
-        <li>Included the <code>Authorization: Bearer &lt;token&gt;</code> header in your request.</li>
+          <li>Called the <strong>Login</strong> endpoint to retrieve a valid token.</li>
+          <li>Included the <code>Authorization: Bearer &lt;token&gt;</code> header in your request.</li>
         </ul>
     
         <p class="subheading">Q: Can I use a POST request for price calculation?</p>
@@ -502,18 +490,14 @@ Content-Type: application/json
   </div>
 
   <script>
-    function copyToClipboard(text) {
-      // Create a temporary textarea element to hold text
-      const tempElem = document.createElement('textarea');
-      tempElem.value = text;
-      document.body.appendChild(tempElem);
-
-      // Select and copy the text
-      tempElem.select();
+    function copyToClipboard(button) {
+      const text = button.getAttribute('data-clipboard');
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
       document.execCommand('copy');
-
-      // Remove the temporary element
-      document.body.removeChild(tempElem);
+      document.body.removeChild(textarea);
       alert('Copied to clipboard!');
     }
   </script>
