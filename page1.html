@@ -242,8 +242,12 @@
       <label for="end-date">End Date:</label>
       <p class="description">Anticipated service end date</p>
       <input type="date" id="end-date" />
-      <p class="limitations">Data must be available in specified date range.</p>
-      <p class="example">Example: 9/1/2025</p>
+      <p class="limitations">
+      End Date must be equal to the Start Date plus Term (Months)
+      </p>
+
+      <ul class="example">Example: If <em>Start Date</em> is <code>01/01/2024</code> and <em>Term (Months)</em> is <code>12</code>, then <em>End Date</em> should be <code>01/01/2025</code>
+      </ul>
 
       <!-- CONTROL AREA (MARKET) -->
       <label for="control-area">Control Area:</label>
@@ -300,7 +304,7 @@
       </p>
       <p class="example">Example: Oncor</p>
 
-      <!-- LOAD PROFILE (now a select) -->
+      <!-- LOAD PROFILE -->
       <label for="load-profile">Load Profile:</label>
       <p class="description">Utility-assigned load profile. See list of available profiles.</p>
       <select id="load-profile">
@@ -370,7 +374,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Table rows are dynamically generated here -->
         </tbody>
       </table>
     </div>
