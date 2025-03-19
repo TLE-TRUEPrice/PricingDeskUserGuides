@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Guide</title>
+  <title>PricingDesk User Guide</title>
   <style>
     /* Base resets and body styling */
     * {
@@ -37,6 +37,28 @@
       font-size: 24px;
       margin-left: 10px;
     }
+
+
+    .welcome-section {
+      background-color: #222;
+      padding: 20px;
+      margin: 20px auto; 
+      max-width: 1030px;
+      border-radius: 8px;
+      text-align: center; 
+    }
+
+    .welcome-section h2 {
+      font-size: 33px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .welcome-section p {
+      font-size: 21px;
+      color: #ccc;
+    }
+
 
     /* Main container styling */
     .container {
@@ -191,12 +213,19 @@
       background-color: #0056b3;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
 </head>
 <body>
   <!-- Header -->
   <div class="header">
     <img src="logo.png" alt="Logo" class="logo" />
-    <h1>User Guide</h1>
+    <h1>PricingDesk User Guide</h1>
+  </div>
+
+  <!-- Welcome Message -->
+  <div class="welcome-section">
+    <h2>Welcome to the TRUEPrice™ Pricing Desk User Guide!</h2>
+    <p>This document describes how to interact with Pricing Desk to receive actionable pricing.</p>
   </div>
 
   <!-- Main Container -->
@@ -207,31 +236,30 @@
       <label for="account-name">Account Name:</label>
       <p class="description">Account holder's name as it appears on utility invoice</p>
       <input type="text" id="account-name" placeholder="DEF Co" />
-      <p class="limitations">Should not be empty.</p>
+      <p class="limitations">Required</p>
       <p class="example">Example: DEF Co</p>
 
       <label for="account-address">Service Address:</label>
       <p class="description">Address that receive service</p>
       <input type="text" id="account-address" placeholder="1st Main St" />
-      <p class="limitations">Should not be empty.</p>
+      <p class="limitations">Required</p>
       <p class="example">Example: 1st Main St</p>
 
       <label for="account-number">Utility Account #:</label>
       <p class="description">Utility assigned account number as it appears on utility invoice</p>
       <input type="text" id="account-number" placeholder="111111-111111" />
-      <p class="limitations">Should not be empty.</p>
+      <p class="limitations">Required</p>
       <p class="example">Example: 111111-111111</p>
 
       <label for="curve-date">Curve Date:</label>
       <p class="description">Date of production for data used to calculate price</p>
       <input type="date" id="curve-date" />
-      <p class="limitations">Energy curves must be present on this date.</p>
+      <p class="limitations">Must be a weekday.</p>
       <p class="example">Example: 4/19/2024</p>
 
       <label for="start-date">Start Date:</label>
       <p class="description">Anticipated service start date</p>
       <input type="date" id="start-date" />
-      <p class="limitations">Data must be available in specified date range.</p>
       <p class="example">Example: 9/1/2024</p>
 
       <label for="term-months">Term (Months):</label>
@@ -328,14 +356,12 @@
       <label for="plc">PLC (kW-mo):</label>
       <p class="description">Utility assigned Peak Load Contribution tags - available through EDI</p>
       <input type="text" id="plc" placeholder="-" />
-      <p class="limitations">Can be empty if not required by the market.</p>
-      <p class="example">Example: -</p>
+      <p class="limitations">Required for PJM and NYISO</p>
 
       <label for="nspl">NSPL (kW-mo):</label>
       <p class="description">Utility assigned Network System Peak Load - available through EDI</p>
       <input type="text" id="nspl" placeholder="-" />
-      <p class="limitations">Can be empty if not required by the market.</p>
-      <p class="example">Example: -</p>
+      <p class="limitations">Required for PJM</p>
 
       <label for="margin">Profit Margin ($/MWh):</label>
       <input type="text" id="margin" placeholder="$10.00" />
@@ -365,6 +391,7 @@
 
     <!-- Summary Section -->
     <button class="show-summary-btn" onclick="showSummary()">Show Summary</button>
+    <button class="show-summary-btn" id="exportToExcel" onclick="exportToExcel()" style="margin-left: 10px; display: none;">Export to Excel</button>
 
     <div class="section" id="summary-section">
       <h2>Summary</h2>
@@ -1784,6 +1811,121 @@
       populateControlAreas();
     };
 
+    function formatAsCurrency(value) {
+      if (!value) return '';      
+      value = value.toString().replace(/[$,]/g, '');
+      if (!isNaN(parseFloat(value))) {
+        return '$' + parseFloat(value).toFixed(2);
+      }  
+      return value;
+    }
+
+
+    function exportToExcel() {
+      // First, load the logo and convert to base64
+      fetch('logo.png')
+        .then(response => response.blob())
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onload = function() {
+            const base64Logo = reader.result.split(',')[1]; // Remove the data URL prefix
+            generateExcel(base64Logo);
+          };
+          reader.readAsDataURL(blob);
+        });
+    }
+
+    function generateExcel(logoBase64) {
+      // Create a new workbook
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Pricing Data');
+      
+      // Add the TRUELight logo
+      const logo = workbook.addImage({
+        base64: logoBase64,
+        extension: 'png',
+      });
+      
+      // Position the logo to match your screenshot (spans columns B-C, rows 1-5)
+      worksheet.addImage(logo, {
+        tl: { col: 1, row: 0 }, // Column B, Row 1
+        br: { col: 3, row: 5 }  // Spans to Column D, Row 5
+      });
+      
+      // Set column widths to match your screenshot
+      worksheet.columns = [
+        { width: 5 },  // Column A
+        { width: 30 }, // Column B
+        { width: 30 }, // Column C
+        { width: 15 }  // Column D
+      ];
+      
+      const fields = [
+        { label: "Account Name", id: "account-name" },
+        { label: "Service Address", id: "account-address" },
+        { label: "Utility Account #", id: "account-number" },
+        { label: "Curve Date", id: "curve-date" },
+        { label: "Start Date", id: "start-date" },
+        { label: "Term (Months)", id: "term-months" },
+        { label: "End Date", id: "end-date" },
+        { label: "ISO", id: "control-area" },
+        { label: "Utility", id: "utility" },
+        { label: "Load Zone", id: "load-zone" },
+        { label: "Capacity Zone", id: "capacity-zone" },
+        { label: "State", id: "state" },
+        { label: "Load Profile", id: "load-profile" },
+        { label: "Voltage", id: "voltage" },
+        { label: "PLC (kW-mo)", id: "plc" },
+        { label: "NSPL (kW-mo)", id: "nspl" },
+        { label: "Profit Margin ($/MWh)", id: "margin" },
+        { label: "Sleeve Fee ($/MWh)", id: "sleeve-fee" },
+        { label: "Utility Billing Surcharge ($/MWh)", id: "utility-billing" },
+        { label: "Other 1 ($/MWh)", id: "other1" },
+        { label: "Other 2 ($/MWh)", id: "other2" }
+      ];
+      
+      // Start adding data from row 6, columns B and C
+      fields.forEach((field, index) => {
+        const element = document.getElementById(field.id);
+        let value = element ? element.value : '';
+        
+        if (['margin', 'sleeve-fee', 'utility-billing', 'other1', 'other2'].includes(field.id)) {
+          value = formatAsCurrency(value);
+        }
+        
+        // Create a row at position 6+index
+        const row = worksheet.getRow(6 + index);
+        
+        // Set values in columns B and C (indices 1 and 2)
+        row.getCell(2).value = field.label;  // Column B
+        row.getCell(3).value = value;        // Column C
+        
+        // Apply borders to these cells
+        [2, 3].forEach(col => {
+          const cell = row.getCell(col);
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+        });
+        
+        row.commit();
+      });
+      
+      // Generate the Excel file
+      workbook.xlsx.writeBuffer().then(buffer => {
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'TRUEPrice_Pricing_Data.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    }
+
     // Show summary + generate raw JSON
     function showSummary() {
       // Gather references
@@ -1821,6 +1963,14 @@
         { label: 'Other 2 ($/MWh)', id: 'other2' }
       ];
 
+      const currencyFields = [
+        'margin',
+        'sleeve-fee',
+        'utility-billing',
+        'other1',
+        'other2'
+      ];
+
       // Populate the summary table
       fields.forEach(field => {
         const row = summaryTableBody.insertRow();
@@ -1829,10 +1979,18 @@
 
         cellLabel.textContent = field.label;
         const element = document.getElementById(field.id);
-        cellValue.textContent = element ? element.value : '';
+        // cellValue.textContent = element ? element.value : '';
+        let value = element ? element.value : '';
+        
+        // Apply currency formatting if needed
+        if (currencyFields.includes(field.id)) {
+          value = formatAsCurrency(value);
+        }
+        
+        cellValue.textContent = value;
       });
 
-      // Construct the JSON body based on user inputs
+
       const priceRequestForm = {
         "Account Name": document.getElementById('account-name').value,
         "Account Address": document.getElementById('account-address').value,
@@ -1850,11 +2008,11 @@
         "Voltage": document.getElementById('voltage').value,
         "PLC (kW-mo)": document.getElementById('plc').value,
         "NSPL (kW-mo)": document.getElementById('nspl').value,
-        "Margin ($/MWh)": document.getElementById('margin').value,
-        "Sleeve Fee ($/MWh)": document.getElementById('sleeve-fee').value,
-        "Utility Billing Surcharge ($/MWh)": document.getElementById('utility-billing').value,
-        "Other 1 ($/MWh)": document.getElementById('other1').value,
-        "Other 2 ($/MWh)": document.getElementById('other2').value,
+        "Margin ($/MWh)": formatAsCurrency(document.getElementById('margin').value),
+        "Sleeve Fee ($/MWh)": formatAsCurrency(document.getElementById('sleeve-fee').value),
+        "Utility Billing Surcharge ($/MWh)": formatAsCurrency(document.getElementById('utility-billing').value),
+        "Other 1 ($/MWh)": formatAsCurrency(document.getElementById('other1').value),
+        "Other 2 ($/MWh)": formatAsCurrency(document.getElementById('other2').value),
         "Historical Usage": "N"
       };
 
@@ -1873,6 +2031,8 @@
       // Show the summary section and raw JSON section
       summarySection.style.display = 'block';
       rawJsonSection.style.display = 'block';
+
+      document.getElementById('exportToExcel').style.display = 'inline-block';
     }
 
     window.onload = function() {
