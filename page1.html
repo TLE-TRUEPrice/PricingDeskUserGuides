@@ -312,7 +312,7 @@
 
       <!-- CAPACITY ZONE -->
       <label for="capacity-zone">Capacity Zone:</label>
-      <p class="description">Applicable capacity zone (Applicable in NYISO only, leave blank otherwise)</p>
+      <p class="description">Applicable capacity zone</p>
       <select id="capacity-zone">
         <option value="">--Select Capacity Zone--</option>
       </select>
@@ -334,7 +334,7 @@
 
       <!-- LOAD PROFILE -->
       <label for="load-profile">Load Profile:</label>
-      <p class="description">Utility-assigned load profile. See list of available profiles.</p>
+      <p class="description">Utility-assigned load profile - See list of available profiles.</p>
       <select id="load-profile">
         <option value="">--Select Load Profile--</option>
       </select>
@@ -1889,6 +1889,12 @@
         const element = document.getElementById(field.id);
         let value = element ? element.value : '';
         
+        if (['curve-date', 'start-date', 'end-date'].includes(field.id)) {
+          // Convert yyyy-mm-dd to Date object
+          const [year, month, day] = value.split('-');
+          value = new Date(year, month - 1, day); 
+        }
+
         if (['margin', 'sleeve-fee', 'utility-billing', 'other1', 'other2'].includes(field.id)) {
           value = formatAsCurrency(value);
         }
@@ -1896,9 +1902,14 @@
         // Create a row at position 6+index
         const row = worksheet.getRow(6 + index);
         
-        // Set values in columns B and C (indices 1 and 2)
         row.getCell(2).value = field.label;  // Column B
         row.getCell(3).value = value;        // Column C
+
+        if (['curve-date', 'start-date', 'end-date'].includes(field.id)) {
+          const cell = row.getCell(3);
+          cell.numFmt = 'mm/dd/yyyy'; 
+          cell.value = value; 
+        }
         
         // Apply borders to these cells
         [2, 3].forEach(col => {
@@ -1928,6 +1939,16 @@
 
     // Show summary + generate raw JSON
     function showSummary() {
+
+      function formatDate(dateString) {
+        if (!dateString) return '';
+        const [year, month, day] = dateString.split('-');
+        return `${month}/${day}/${year}`;
+      }
+
+      // List of date fields
+      const dateFields = ['curve-date', 'start-date', 'end-date'];
+
       // Gather references
       const summarySection = document.getElementById('summary-section');
       const summaryTableBody = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
@@ -1981,7 +2002,10 @@
         const element = document.getElementById(field.id);
         // cellValue.textContent = element ? element.value : '';
         let value = element ? element.value : '';
-        
+
+        if (dateFields.includes(field.id)) {
+          value = formatDate(value);
+        }
         // Apply currency formatting if needed
         if (currencyFields.includes(field.id)) {
           value = formatAsCurrency(value);
@@ -1995,10 +2019,10 @@
         "Account Name": document.getElementById('account-name').value,
         "Account Address": document.getElementById('account-address').value,
         "Account #": document.getElementById('account-number').value,
-        "Curve Date": document.getElementById('curve-date').value,
-        "Start Date": document.getElementById('start-date').value,
+        "Curve Date": formatDate(document.getElementById('curve-date').value),
+        "Start Date": formatDate(document.getElementById('start-date').value),
         "Term (Months)": document.getElementById('term-months').value,
-        "End Date": document.getElementById('end-date').value,
+        "End Date": formatDate(document.getElementById('end-date').value),
         "Control Area": document.getElementById('control-area').value.toUpperCase(),
         "Utility": document.getElementById('utility').value,
         "Load Zone": document.getElementById('load-zone').value,
