@@ -212,6 +212,36 @@
     .show-summary-btn:hover {
       background-color: #0056b3;
     }
+
+    .steps-section {
+      background-color: #222;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .steps-section h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .steps-section ol {
+      margin-left: 20px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .steps-section li {
+      margin-bottom: 8px;
+    }
+
+    .steps-section ul {
+      padding-left: 10px; /* Add left padding to create space */
+      margin-left: 10px; /* Additional margin if needed */
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
 </head>
@@ -226,6 +256,16 @@
   <div class="welcome-section">
     <h2>Welcome to the TRUEPrice™ Pricing Desk User Guide!</h2>
     <p>This document describes how to interact with Pricing Desk to receive actionable pricing.</p>
+  </div>
+
+  <!-- Steps to Price Section (new) -->
+  <div class="steps-section">
+    <h2>Steps to Price:</h2>
+    <ul> <!-- Changed from <ol> to <ul> -->
+      <li>Log onto TRUEPrice</li>
+      <li>Select Pricing Desk from the Navigation Menu</li>
+      <li>Use the Account Information Tool below to fill out and export the Price Request Form</li>
+    </ul> 
   </div>
 
   <!-- Main Container -->
@@ -1888,6 +1928,14 @@
       fields.forEach((field, index) => {
         const element = document.getElementById(field.id);
         let value = element ? element.value : '';
+
+        if (['plc', 'nspl'].includes(field.id) && value === '') {
+          value = '-';
+        }
+
+        if (['margin', 'sleeve-fee', 'utility-billing', 'other1', 'other2'].includes(field.id)) {
+          value = value === '' ? '$0.00' : formatAsCurrency(value);
+        }
         
         if (['curve-date', 'start-date', 'end-date'].includes(field.id)) {
           // Convert yyyy-mm-dd to Date object
@@ -2061,8 +2109,136 @@
 
     window.onload = function() {
       populateControlAreas();
-
+      
+    // Add this line to call our new initialization function
+    initFormEnhancements();
     }
+    
+    // INSERT NEW CODE BELOW THIS LINE
+    function calculateEndDate() {
+      const startDateInput = document.getElementById('start-date');
+      const termMonthsInput = document.getElementById('term-months');
+      const endDateInput = document.getElementById('end-date');
+      
+      // Only proceed if we have both a start date and term months
+      if (startDateInput.value && termMonthsInput.value) {
+        const startDate = new Date(startDateInput.value);
+        const termMonths = parseInt(termMonthsInput.value, 10);
+        
+        if (!isNaN(startDate.getTime()) && !isNaN(termMonths)) {
+          // Create a new date by adding the months to the start date
+          const endDate = new Date(startDate);
+          endDate.setMonth(endDate.getMonth() + termMonths);
+          
+          // Format the date as YYYY-MM-DD for the date input
+          const year = endDate.getFullYear();
+          const month = String(endDate.getMonth() + 1).padStart(2, '0');
+          const day = String(endDate.getDate()).padStart(2, '0');
+          const formattedEndDate = `${year}-${month}-${day}`;
+          
+          // Set the end date value
+          endDateInput.value = formattedEndDate;
+        }
+      }
+    }
+
+    // Add validation for Term Months field to accept only positive integers
+    function validateTermMonths() {
+      const termMonthsInput = document.getElementById('term-months');
+      const value = termMonthsInput.value;
+      
+      // Only validate if there's a value - this allows other fields to be filled first
+      if (value) {
+        // Check if value is a valid positive integer
+        if (!(/^\d+$/.test(value)) || parseInt(value, 10) <= 0) {
+          termMonthsInput.setCustomValidity('Please enter a positive integer value (greater than 0)');
+        } else {
+          termMonthsInput.setCustomValidity('');
+        }
+        termMonthsInput.reportValidity();
+      } else {
+        // Clear validation error if field is empty
+        termMonthsInput.setCustomValidity('');
+      }
+    }
+
+    // Function to enforce positive integers in the Term Months input
+    function setupTermMonthsInput() {
+      const termMonthsInput = document.getElementById('term-months');
+      
+      // Set minimum attribute to prevent negative values in spinner controls
+      termMonthsInput.setAttribute('min', '1');
+      
+      // Prevent non-numeric key presses
+      termMonthsInput.addEventListener('keypress', function(e) {
+        const charCode = e.which ? e.which : e.keyCode;
+        // Allow only numeric input (0-9)
+        if (charCode < 48 || charCode > 57) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      
+      // Prevent paste of non-numeric values
+      termMonthsInput.addEventListener('paste', function(e) {
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        if (!/^\d+$/.test(pastedText) || parseInt(pastedText, 10) <= 0) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      
+      // Only validate when user interacts with the field
+      termMonthsInput.addEventListener('blur', function() {
+        if (termMonthsInput.value !== '') {
+          const value = parseInt(termMonthsInput.value, 10);
+          if (isNaN(value) || value <= 0) {
+            termMonthsInput.value = '';
+          }
+          validateTermMonths();
+        }
+      });
+      
+      // Check for zero or negative values when changed via spinner
+      termMonthsInput.addEventListener('change', function() {
+        if (termMonthsInput.value !== '') {
+          const value = parseInt(termMonthsInput.value, 10);
+          if (isNaN(value) || value <= 0) {
+            termMonthsInput.value = '';
+          }
+          validateTermMonths();
+        }
+      });
+    }
+
+    // Function to initialize all the enhancements
+    function initFormEnhancements() {
+      const startDateInput = document.getElementById('start-date');
+      const termMonthsInput = document.getElementById('term-months');
+      
+      // Make term months required but don't enforce validation initially
+      termMonthsInput.required = true;
+      
+      // Set up strict positive integer validation for Term Months
+      setupTermMonthsInput();
+      
+      // Add event listeners to recalculate end date when start date or term changes
+      startDateInput.addEventListener('change', calculateEndDate);
+      
+      termMonthsInput.addEventListener('input', function() {
+        if (this.value !== '') {
+          validateTermMonths();
+          if (this.checkValidity()) {
+            calculateEndDate();
+          }
+        }
+      });
+      
+      // Initial calculation if both values are already set
+      if (startDateInput.value && termMonthsInput.value) {
+        calculateEndDate();
+      }
+  }
   </script>
 </body>
 </html>

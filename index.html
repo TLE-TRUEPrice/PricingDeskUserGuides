@@ -36,9 +36,16 @@
       margin-bottom: 10px;
       padding: 8px;
       border-radius: 4px;
+      transition: all 0.3s ease;
     }
     .sidebar a:hover {
       background-color: #333;
+    }
+    
+    /* Style for active/current page */
+    .sidebar a.active {
+      background-color: #007bff;
+      color: white;
     }
 
     /* Main content area (to the right of sidebar) */
@@ -59,8 +66,8 @@
   <!-- Sidebar Navigation -->
   <div class="sidebar">
     <h2>Documentation</h2>
-    <a href="page1.html" target="docFrame">PricingDesk User Guide</a>
-    <a href="page2.html" target="docFrame">PricingDesk API Guide</a>
+    <a href="page1.html" target="docFrame" class="active" onclick="setActive(this)">PricingDesk User Guide</a>
+    <a href="page2.html" target="docFrame" onclick="setActive(this)">PricingDesk API Guide</a>
   </div>
 
   <!-- Main Content Area -->
@@ -68,6 +75,34 @@
     <!-- By default load page1.html in the iframe -->
     <iframe name="docFrame" src="page1.html"></iframe>
   </div>
+
+  <script>
+    // Function to set the active link
+    function setActive(clickedLink) {
+      // Remove active class from all links
+      const links = document.querySelectorAll('.sidebar a');
+      links.forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Add active class to clicked link
+      clickedLink.classList.add('active');
+    }
+    
+    // Set initial active state based on the current iframe src
+    document.addEventListener('DOMContentLoaded', function() {
+      const iframe = document.querySelector('iframe[name="docFrame"]');
+      const currentPage = iframe.src.split('/').pop();
+      
+      const links = document.querySelectorAll('.sidebar a');
+      links.forEach(link => {
+        const linkPage = link.href.split('/').pop();
+        if (linkPage === currentPage) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
