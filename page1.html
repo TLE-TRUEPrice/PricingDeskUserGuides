@@ -2051,6 +2051,10 @@
         // cellValue.textContent = element ? element.value : '';
         let value = element ? element.value : '';
 
+        if (['plc', 'nspl'].includes(field.id) && value === '') {
+          value = '-';
+        }
+
         if (dateFields.includes(field.id)) {
           value = formatDate(value);
         }
@@ -2129,6 +2133,7 @@
           // Create a new date by adding the months to the start date
           const endDate = new Date(startDate);
           endDate.setMonth(endDate.getMonth() + termMonths);
+          endDate.setDate(endDate.getDate() + 1);
           
           // Format the date as YYYY-MM-DD for the date input
           const year = endDate.getFullYear();
