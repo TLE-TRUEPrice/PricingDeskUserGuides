@@ -331,8 +331,6 @@ Host: 3.21.123.23:8011
         <p class="subheading">Description</p>
         <p>
           Retrieves a price calculation based on the request body parameters. 
-          The data may include summary, monthly summary, or other types depending
-          on <code>response_type</code>.
         </p>
 
         <p class="subheading">HTTP Method</p>
@@ -403,9 +401,6 @@ Host: 3.21.123.23:8011
       "Historical Usage": "N"
     }
   ],
-  "response_type": "summary", 
-  // Possible values: "summary", "monthly_summary"
-
   "response_file_type": "xlsx"
   // Possible values: "csv" or "xlsx"
 }
@@ -431,7 +426,6 @@ Content-Type: application/json
 
 {
   "price_request_forms": [...],
-  "response_type": "summary",
   "response_file_type": "xlsx"
 }
         </pre>

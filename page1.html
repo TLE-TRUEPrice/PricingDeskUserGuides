@@ -1859,7 +1859,7 @@
       }  
       return value;
     }
-
+    
 
     function exportToExcel() {
       // First, load the logo and convert to base64
@@ -2060,7 +2060,7 @@
         }
         // Apply currency formatting if needed
         if (currencyFields.includes(field.id)) {
-          value = formatAsCurrency(value);
+          value = value === '' ? '$0.00' : formatAsCurrency(value);
         }
         
         cellValue.textContent = value;
