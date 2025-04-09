@@ -318,7 +318,7 @@
       </ul>
 
       <!-- CONTROL AREA (MARKET) -->
-      <label for="control-area">Control Area:</label>
+      <label for="control-area">ISO:</label>
       <p class="description">Independent System Operator (grid) that service will occur in</p>
       <select id="control-area">
         <option value="">--Select Control Area--</option>
@@ -2069,13 +2069,13 @@
 
       const priceRequestForm = {
         "Account Name": document.getElementById('account-name').value,
-        "Account Address": document.getElementById('account-address').value,
-        "Account #": document.getElementById('account-number').value,
+        "Service Address": document.getElementById('account-address').value,
+        "Utility Account #": document.getElementById('account-number').value,
         "Curve Date": formatDate(document.getElementById('curve-date').value),
         "Start Date": formatDate(document.getElementById('start-date').value),
         "Term (Months)": document.getElementById('term-months').value,
         "End Date": formatDate(document.getElementById('end-date').value),
-        "Control Area": document.getElementById('control-area').value.toUpperCase(),
+        "ISO": document.getElementById('control-area').value.toUpperCase(),
         "Utility": document.getElementById('utility').value,
         "Load Zone": document.getElementById('load-zone').value,
         "Capacity Zone": document.getElementById('capacity-zone').value,
@@ -2084,7 +2084,7 @@
         "Voltage": document.getElementById('voltage').value,
         "PLC (kW-mo)": document.getElementById('plc').value,
         "NSPL (kW-mo)": document.getElementById('nspl').value,
-        "Margin ($/MWh)": formatAsCurrency(document.getElementById('margin').value),
+        "Profit Margin ($/MWh)": formatAsCurrency(document.getElementById('margin').value),
         "Sleeve Fee ($/MWh)": formatAsCurrency(document.getElementById('sleeve-fee').value),
         "Utility Billing Surcharge ($/MWh)": formatAsCurrency(document.getElementById('utility-billing').value),
         "Other 1 ($/MWh)": formatAsCurrency(document.getElementById('other1').value),
