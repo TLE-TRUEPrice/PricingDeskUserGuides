@@ -370,21 +370,20 @@ Host: 3.21.123.23:8011
         <p class="subheading">Request Body</p>
         <p>
           The request body (raw JSON) includes one or more price request forms, along with 
-          <code>response_type</code> and <code>response_file_type</code> parameters.
+          <code>response_file_type</code> parameters.
         </p>
         <pre>
 {
   "price_request_forms": [
     {
       "Account Name": "ABC Co",
-      "Account Address": "1st Main St",
-      "Account #": "111111-111111",
+      "Service Address": "1st Main St",
+      "Utility Account #": "111111-111111",
       "Curve Date": "01/01/2023",
-      "TimeStamp": "08:04:04+00:00",
       "Start Date": "11/01/2024",
       "Term (Months)": "12",
       "End Date": "11/01/2025",
-      "Control Area": "MISO",
+      "ISO": "MISO",
       "Utility": "AMEREN",
       "Load Zone": "AMILCILCO",
       "Capacity Zone": "AMILCILCO",
@@ -393,7 +392,7 @@ Host: 3.21.123.23:8011
       "Voltage": "Secondary",
       "PLC (kW-mo)": "2.3",
       "NSPL (kW-mo)": "2.5",
-      "Margin ($/MWh)": "10.00",
+      "Profit Margin ($/MWh)": "10.00",
       "Sleeve Fee ($/MWh)": "1.25",
       "Utility Billing Surcharge ($/MWh)": "0.50",
       "Other 1 ($/MWh)": "1.00",
@@ -414,7 +413,7 @@ Host: 3.21.123.23:8011
         <div class="important">
           <strong>Important:</strong> 
           - The <code>price_request_forms</code> array must contain at least one object with all required fields.<br/>
-          - Ensure <code>response_type</code> and <code>response_file_type</code> are supported.  
+          - Ensure <code>response_file_type</code> is supported.  
         </div>
 
         <p class="subheading">Example Request</p>
@@ -445,9 +444,9 @@ Content-Type: application/json
 
         <p class="subheading">Expected Response</p>
         <p>
-          The response will contain detailed cost or usage data in JSON format. 
-          If a file download is triggered (depending on <code>response_file_type</code>), 
-          you may receive binary data that can be saved as <code>.csv</code> or <code>.xlsx</code>.
+          The response will contain detailed cost or usage data that can be downloaded 
+          in a zip binary data (depending on <code>response_file_type</code>), 
+          that can be saved as <code>.csv</code> or <code>.xlsx</code>.
         </p>
         <pre>
 {
