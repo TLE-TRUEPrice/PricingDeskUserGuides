@@ -1802,7 +1802,7 @@
         if (!lp) return;
         const option = document.createElement("option");
         option.value = lp;
-        option.textContent = lp;
+        option.innerHTML = lp.replace(/ /g, '&nbsp;');
         loadProfileSelect.appendChild(option);
       });
 
