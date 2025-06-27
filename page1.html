@@ -2152,9 +2152,9 @@
           //const month = String(endDate.getMonth() + 1).padStart(2, '0');
           //const day = String(endDate.getDate()).padStart(2, '0');
           //const formattedEndDate = `${year}-${month}-${day}`;
-	  const yyyy = newEndDate.getFullYear();
-	  const mm = String(newEndDate.getMonth() + 1).padStart(2, '0');
-	  const dd = String(newEndDate.getDate()).padStart(2, '0');
+	  const yyyy = result.getFullYear();
+	  const mm = String(result.getMonth() + 1).padStart(2, '0');
+	  const dd = String(result.getDate()).padStart(2, '0');
 	  endDateInput.value = `${yyyy}-${mm}-${dd}`;
           
           // Set the end date value
