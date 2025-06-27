@@ -2137,20 +2137,16 @@
           // Create a new date by adding the months to the start date
           //const endDate = new Date(startDate);
 	  const startDay = startDate.getDate();
-	  const targetMonth = startDate.getMonth() + termMonths;
-          const newEndDate = new Date(startDate.getFullYear(), targetMonth, 1);
+	  const startMonth = startDate.getMonth();
+	  const startYear = startdate.getFullYeaar();
+		// Safe: build new date by parts
+          const result = new Date(startYear, startMonth + termMonths, startDay);
 
-      // Try to preserve the same day
-          newEndDate.setDate(startDay);
-	  //endDate.setMonth(endDate.getMonth() + termMonths);
-          //endDate.setDate(endDate.getDate() + 1);
-          if (newEndDate.getMonth() !== (targetMonth % 12)) {
-        // Overflow → fallback to last day of previous month
-        	newEndDate.setDate(0);
-      	  }
-
-	  
-          
+      // Fix overflow if day > days in target month:
+          if (result.getDate() !== startDay) {
+        // The day overflowed → set to last day of previous month
+       		 result.setDate(0);
+	  }
           // Format the date as YYYY-MM-DD for the date input
           //const year = endDate.getFullYear();
           //const month = String(endDate.getMonth() + 1).padStart(2, '0');
