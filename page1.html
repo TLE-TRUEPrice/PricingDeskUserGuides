@@ -2130,31 +2130,36 @@
       
       // Only proceed if we have both a start date and term months
       if (startDateInput.value && termMonthsInput.value) {
-        const startDate = new Date(startDateInput.value);
+	const parts = startDateInput.value.split('-');
+	const startYear = parseInt(parts[0], 10);
+	const startMonth = parseInt(parts[1], 10) -1;
+        const startDay = parseInt(parts[2], 10);
         const termMonths = parseInt(termMonthsInput.value, 10);
         
-        if (!isNaN(startDate.getTime()) && !isNaN(termMonths)) {
+        if (!isNaN(startYear) && !isNaN(termMonths)) {
+	  let result = new Date(Date.UTC(startYear, startMonth + termMonths, startDay));
+	
           // Create a new date by adding the months to the start date
           //const endDate = new Date(startDate);
-	  const startDay = startDate.getDate();
-	  const startMonth = startDate.getMonth();
-	  const startYear = startDate.getFullYear();
+	  // startDay = startDate.getDate();
+	  //const startMonth = startDate.getMonth();
+	  //const startYear = startDate.getFullYear();
 		// Safe: build new date by parts
-          const result = new Date(startYear, startMonth + termMonths, startDay);
+          //const result = new Date(startYear, startMonth + termMonths, startDay);
 
       // Fix overflow if day > days in target month:
-          if (result.getDate() !== startDay) {
+          if (result.getUTCDate() !== startDay) {
         // The day overflowed → set to last day of previous month
-       		 result.setDate(0);
+       		 result.setUTCDate(0);
 	  }
           // Format the date as YYYY-MM-DD for the date input
           //const year = endDate.getFullYear();
           //const month = String(endDate.getMonth() + 1).padStart(2, '0');
           //const day = String(endDate.getDate()).padStart(2, '0');
           //const formattedEndDate = `${year}-${month}-${day}`;
-	  const yyyy = result.getFullYear();
-	  const mm = String(result.getMonth() + 1).padStart(2, '0');
-	  const dd = String(result.getDate()).padStart(2, '0');
+	  const yyyy = result.getUTCFullYear();
+	  const mm = String(result.getUTCMonth() + 1).padStart(2, '0');
+	  const dd = String(result.getUTCDate()).padStart(2, '0');
 	  endDateInput.value = `${yyyy}-${mm}-${dd}`;
           
           // Set the end date value
