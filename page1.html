@@ -2135,21 +2135,30 @@
         
         if (!isNaN(startDate.getTime()) && !isNaN(termMonths)) {
           // Create a new date by adding the months to the start date
-          const endDate = new Date(startDate);
-          endDate.setMonth(endDate.getMonth() + termMonths);
-          endDate.setDate(endDate.getDate() + 1);
+          //const endDate = new Date(startDate);
+	  const newEndDate = new Date(startDate);
+	  newEndDate.setMonth(newEndDate.getMonth() + termMonths);
+          //endDate.setMonth(endDate.getMonth() + termMonths);
+          //endDate.setDate(endDate.getDate() + 1);
           
           // Format the date as YYYY-MM-DD for the date input
-          const year = endDate.getFullYear();
-          const month = String(endDate.getMonth() + 1).padStart(2, '0');
-          const day = String(endDate.getDate()).padStart(2, '0');
-          const formattedEndDate = `${year}-${month}-${day}`;
+          //const year = endDate.getFullYear();
+          //const month = String(endDate.getMonth() + 1).padStart(2, '0');
+          //const day = String(endDate.getDate()).padStart(2, '0');
+          //const formattedEndDate = `${year}-${month}-${day}`;
+	  const yyyy = newEndDate.getFullYear();
+	  const mm = String(newEndDate.getMonth() + 1).padStart(2, '0');
+	  const dd = String(newEndDate.getDate()).padStart(2, '0');
+	  endDateInput.value = `${yyyy}-${mm}-${dd}`;
           
           // Set the end date value
-          endDateInput.value = formattedEndDate;
+          //endDateInput.value = formattedEndDate;
         }
       }
     }
+	  
+
+	 
 
     // Add validation for Term Months field to accept only positive integers
     function validateTermMonths() {
