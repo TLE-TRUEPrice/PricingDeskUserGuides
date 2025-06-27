@@ -2136,14 +2136,20 @@
         if (!isNaN(startDate.getTime()) && !isNaN(termMonths)) {
           // Create a new date by adding the months to the start date
           //const endDate = new Date(startDate);
+	  const startDay = startDate.getDate();
+	  const targetMonth = startDate.getMonth() + termMonths;
+          const newEndDate = new Date(startDate.getFullYear(), targetMonth, 1);
+
+      // Try to preserve the same day
+          newEndDate.setDate(startDay);
 	  //endDate.setMonth(endDate.getMonth() + termMonths);
           //endDate.setDate(endDate.getDate() + 1);
-	  const newEndDate = new Date(
-        	startDate.getFullYear(),
-        	startDate.getMonth() + termMonths,
-        	startDate.getDate()
-      	  );
+          if (newEndDate.getMonth() !== (targetMonth % 12)) {
+        // Overflow → fallback to last day of previous month
+        	newEndDate.setDate(0);
+      	  }
 
+	  
           
           // Format the date as YYYY-MM-DD for the date input
           //const year = endDate.getFullYear();
