@@ -2136,10 +2136,14 @@
         if (!isNaN(startDate.getTime()) && !isNaN(termMonths)) {
           // Create a new date by adding the months to the start date
           //const endDate = new Date(startDate);
-	  const newEndDate = new Date(startDate);
-	  newEndDate.setMonth(newEndDate.getMonth() + termMonths);
-          //endDate.setMonth(endDate.getMonth() + termMonths);
+	  //endDate.setMonth(endDate.getMonth() + termMonths);
           //endDate.setDate(endDate.getDate() + 1);
+	  const newEndDate = new Date(
+        	startDate.getFullYear(),
+        	startDate.getMonth() + termMonths,
+        	startDate.getDate()
+      	  );
+
           
           // Format the date as YYYY-MM-DD for the date input
           //const year = endDate.getFullYear();
